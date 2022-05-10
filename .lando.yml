@@ -1,0 +1,32 @@
+name: project
+recipe: drupal9
+config:
+  php: '8.0'
+  composer_version: '2.0.7'
+  via: apache:2.4
+  webroot: docroot
+  database: mysql
+  drush: '*'
+  xdebug: false
+proxy:
+  appserver:
+    - project.lndo.site
+  phpmyadmin:
+    - phpmyadmin.project.lndo.site
+  solr:
+    - solr.project.lndo.site:8983
+services:
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - database
+  solr:
+    type: solr:7
+    core: drupal9
+    portforward: true
+    config:
+      conf: docroot/modules/contrib/search_api_solr/solr-conf-templates/7.x
+tooling:
+  blt:
+    service: appserver
+    cmd: /app/vendor/bin/blt
